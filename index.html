@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Quiz</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #b9b3a9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      width: 450px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 20px;
+      text-align: center;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #428bca;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 4px;
+      margin: 10px;
+    }
+    .button:hover { background-color: #3071a9; }
+    .result { font-weight: bold; margin-top: 20px; }
+    .hide { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiz</h1>
+    <p>Test your knowledge by answering the following questions:</p>
+    <div id="quiz"></div>
+    <div id="result" class="result"></div>
+    <button id="submit" class="button">Submit</button>
+    <button id="retry" class="button hide">Retry</button>
+    <button id="showAnswer" class="button hide">Show Answer</button>
+  </div>
+  <script>
+    const quizData = [
+      { q: 'Capital of France?', o: ['Paris', 'London', 'Berlin', 'Madrid'], a: 'Paris' },
+      { q: 'Largest planet?', o: ['Mars', 'Saturn', 'Jupiter', 'Neptune'], a: 'Jupiter' },
+      { q: 'FIFA World Cup 2018?', o: ['Brazil', 'Germany', 'France', 'Argentina'], a: 'France' },
+      { q: 'Tallest mountain?', o: ['Mount Everest', 'K2', 'Kangchenjunga', 'Makalu'], a: 'Mount Everest' },
+      { q: 'Largest ocean?', o: ['Pacific Ocean', 'Indian Ocean', 'Atlantic Ocean', 'Arctic Ocean'], a: 'Pacific Ocean' },
+    ];
+
+    const quiz = document.getElementById('quiz');
+    const result = document.getElementById('result');
+    const submitBtn = document.getElementById('submit');
+    const retryBtn = document.getElementById('retry');
+    const showAnswerBtn = document.getElementById('showAnswer');
+
+    let current = 0, score = 0, wrong = [];
+
+    function renderQuestion() {
+  var questionData = quizData[current];
+  var question = questionData.q;
+  var options = questionData.o;
+  var questionElement = document.createElement('div');
+  questionElement.textContent = question;
+  quiz.innerHTML = '';
+  quiz.appendChild(questionElement);
+  for (var i = 0; i < options.length; i++) {
+    var option = options[i];
+    var label = document.createElement('label');
+    var input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'quiz';
+    input.value = option;
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(option));
+    quiz.appendChild(label);
+  }
+}
+
+function checkAnswer() {
+  
+  var selected = document.querySelector('input[name="quiz"]:checked');
+  if (selected) {
+    if (selected.value === quizData[current].a) {
+      score++;
+    } else {
+      wrong.push({
+        q: quizData[current].q,
+        incorrect: selected.value,
+        correct: quizData[current].a
+      });
+    }
+    current++;
+    if (current < quizData.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }
+}
+
+function showResult() {
+  quiz.style.display = 'none';
+  submitBtn.style.display = 'none';
+  retryBtn.style.display = 'inline-block';
+  showAnswerBtn.style.display = 'inline-block';
+  result.innerHTML = 'You scored ' + score + ' out of ' + quizData.length + '!';
+}
+
+    function retryQuiz() {
+      current = 0;
+      score = 0;
+      wrong = [];
+      quiz.style.display = 'block';
+      submitBtn.style.display = 'inline-block';
+      retryBtn.style.display = 'none';
+      showAnswerBtn.style.display = 'none';
+      result.innerHTML = '';
+      renderQuestion();
+    }
+
+    submitBtn.addEventListener('click', checkAnswer);
+    retryBtn.addEventListener('click', retryQuiz);
+   
+
+    renderQuestion();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
